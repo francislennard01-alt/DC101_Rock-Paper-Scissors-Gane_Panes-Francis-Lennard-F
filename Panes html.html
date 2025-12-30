@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors - Mini Arcade</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎮 Rock Paper Scissors</h1>
+            <p>Choose your weapon and beat the computer!</p>
+        </div>
+
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+            <div class="score-item">
+                <div class="score-label">Player Wins</div>
+                <div class="score-value" id="player-score">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">Draws</div>
+                <div class="score-value" id="draw-score">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">Computer Wins</div>
+                <div class="score-value" id="computer-score">0</div>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div class="game-area">
+            <!-- Choice Buttons -->
+            <div class="choices">
+                <button class="choice-btn" onclick="playGame('rock')" title="Rock">
+                    ✊
+                </button>
+                <button class="choice-btn" onclick="playGame('paper')" title="Paper">
+                    ✋
+                </button>
+                <button class="choice-btn" onclick="playGame('scissors')" title="Scissors">
+                    ✌️
+                </button>
+            </div>
+
+            <!-- Result Display -->
+            <div class="result-display hidden" id="result-display">
+                <div class="player-choices">
+                    <div class="player-choice">
+                        <div class="player-choice-label">You</div>
+                        <div class="player-choice-icon" id="player-choice-icon">❓</div>
+                    </div>
+                    <div class="vs-text">VS</div>
+                    <div class="player-choice">
+                        <div class="player-choice-label">Computer</div>
+                        <div class="player-choice-icon" id="computer-choice-icon">❓</div>
+                    </div>
+                </div>
+                <div class="result-text" id="result-text">Make your choice!</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn play-again-btn" onclick="playAgain()">Play Again</button>
+            <button class="control-btn reset-btn" onclick="resetGame()">Reset Score</button>
+        </div>
+
+        <!-- High Score -->
+        <div class="high-score">
+            <div class="high-score-label">🏆 Winning Streak</div>
+            <div class="high-score-value" id="high-score">0</div>
+        </div>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>

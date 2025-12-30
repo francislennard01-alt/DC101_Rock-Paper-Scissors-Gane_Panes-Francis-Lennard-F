@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors - Mini Arcade</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Score Board */
+        .scoreboard {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        /* Game Area */
+        .game-area {
+            margin-bottom: 30px;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .choice-btn {
+            width: 120px;
+            height: 120px;
+            border: none;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .choice-btn:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .choice-btn:active {
+            transform: translateY(-5px);
+        }
+
+        /* Result Display */
+        .result-display {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-display.hidden {
+            display: none;
+        }
+
+        .player-choices {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .player-choice {
+            text-align: center;
+        }
+
+        .player-choice-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .player-choice-icon {
+            font-size: 4em;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .vs-text {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .result-text {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .result-text.win {
+            color: #28a745;
+        }
+
+        .result-text.lose {
+            color: #dc3545;
+        }
+
+        .result-text.draw {
+            color: #ffc107;
+        }
+
+        /* Control Buttons */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .play-again-btn {
+            background: #28a745;
+            color: white;
+        }
+
+        .play-again-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* High Score */
+        .high-score {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 10px;
+            color: #856404;
+        }
+
+        .high-score-label {
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .high-score-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .choices {
+                gap: 10px;
+            }
+
+            .choice-btn {
+                width: 90px;
+                height: 90px;
+                font-size: 2.5em;
+            }
+
+            .player-choices {
+                gap: 20px;
+            }
+
+            .player-choice-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 3em;
+            }
+
+            .scoreboard {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Animation */
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .bounce {
+            animation: bounce 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎮 Rock Paper Scissors</h1>
+            <p>Choose your weapon and beat the computer!</p>
+        </div>
+
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+            <div class="score-item">
+                <div class="score-label">Player Wins</div>
+                <div class="score-value" id="player-score">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">Draws</div>
+                <div class="score-value" id="draw-score">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">Computer Wins</div>
+                <div class="score-value" id="computer-score">0</div>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div class="game-area">
+            <!-- Choice Buttons -->
+            <div class="choices">
+                <button class="choice-btn" onclick="playGame('rock')" title="Rock">
+                    ✊
+                </button>
+                <button class="choice-btn" onclick="playGame('paper')" title="Paper">
+                    ✋
+                </button>
+                <button class="choice-btn" onclick="playGame('scissors')" title="Scissors">
+                    ✌️
+                </button>
+            </div>
+
+            <!-- Result Display -->
+            <div class="result-display hidden" id="result-display">
+                <div class="player-choices">
+                    <div class="player-choice">
+                        <div class="player-choice-label">You</div>
+                        <div class="player-choice-icon" id="player-choice-icon">❓</div>
+                    </div>
+                    <div class="vs-text">VS</div>
+                    <div class="player-choice">
+                        <div class="player-choice-label">Computer</div>
+                        <div class="player-choice-icon" id="computer-choice-icon">❓</div>
+                    </div>
+                </div>
+                <div class="result-text" id="result-text">Make your choice!</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="control-btn play-again-btn" onclick="playAgain()">Play Again</button>
+            <button class="control-btn reset-btn" onclick="resetGame()">Reset Score</button>
+        </div>
+
+        <!-- High Score -->
+        <div class="high-score">
+            <div class="high-score-label">🏆 Winning Streak</div>
+            <div class="high-score-value" id="high-score">0</div>
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        var playerScore = 0;
+        var computerScore = 0;
+        var drawScore = 0;
+        var currentStreak = 0;
+        var highScore = 0;
+
+        // Choice emoji mapping
+        var choiceEmojis = {
+            rock: '✊',
+            paper: '✋',
+            scissors: '✌️'
+        };
+
+        // Initialize game - load high score from localStorage
+        function initGame() {
+            var savedHighScore = localStorage.getItem('rpsHighScore');
+            if (savedHighScore) {
+                highScore = parseInt(savedHighScore);
+                document.getElementById('high-score').textContent = highScore;
+            }
+        }
+
+        // Get computer's random choice
+        function getComputerChoice() {
+            var choices = ['rock', 'paper', 'scissors'];
+            var randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        // Determine winner
+        function determineWinner(playerChoice, computerChoice) {
+            if (playerChoice === computerChoice) {
+                return 'draw';
+            }
+
+            if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                return 'win';
+            }
+
+            return 'lose';
+        }
+
+        // Update scores
+        function updateScores(result) {
+            if (result === 'win') {
+                playerScore++;
+                currentStreak++;
+                document.getElementById('player-score').textContent = playerScore;
+                
+                // Update high score if current streak is higher
+                if (currentStreak > highScore) {
+                    highScore = currentStreak;
+                    localStorage.setItem('rpsHighScore', highScore);
+                    document.getElementById('high-score').textContent = highScore;
+                }
+            } else if (result === 'lose') {
+                computerScore++;
+                currentStreak = 0; // Reset streak on loss
+                document.getElementById('computer-score').textContent = computerScore;
+            } else {
+                drawScore++;
+                document.getElementById('draw-score').textContent = drawScore;
+            }
+        }
+
+        // Display result
+        function displayResult(playerChoice, computerChoice, result) {
+            var resultDisplay = document.getElementById('result-display');
+            var playerChoiceIcon = document.getElementById('player-choice-icon');
+            var computerChoiceIcon = document.getElementById('computer-choice-icon');
+            var resultText = document.getElementById('result-text');
+
+            // Show result display
+            resultDisplay.classList.remove('hidden');
+
+            // Set choice icons
+            playerChoiceIcon.textContent = choiceEmojis[playerChoice];
+            computerChoiceIcon.textContent = choiceEmojis[computerChoice];
+
+            // Add bounce animation
+            playerChoiceIcon.classList.add('bounce');
+            computerChoiceIcon.classList.add('bounce');
+
+            // Remove animation after it completes
+            setTimeout(function() {
+                playerChoiceIcon.classList.remove('bounce');
+                computerChoiceIcon.classList.remove('bounce');
+            }, 500);
+
+            // Set result text and color
+            resultText.className = 'result-text ' + result;
+            
+            if (result === 'win') {
+                resultText.textContent = '🎉 You Win!';
+            } else if (result === 'lose') {
+                resultText.textContent = '😢 You Lose!';
+            } else {
+                resultText.textContent = '🤝 It\'s a Draw!';
+            }
+        }
+
+        // Main game function
+        function playGame(playerChoice) {
+            var computerChoice = getComputerChoice();
+            var result = determineWinner(playerChoice, computerChoice);
+            
+            updateScores(result);
+            displayResult(playerChoice, computerChoice, result);
+        }
+
+        // Play again - just hide result
+        function playAgain() {
+            var resultDisplay = document.getElementById('result-display');
+            resultDisplay.classList.add('hidden');
+        }
+
+        // Reset entire game
+        function resetGame() {
+            // Confirm before resetting
+            var confirmReset = confirm('Are you sure you want to reset all scores?');
+            
+            if (confirmReset) {
+                playerScore = 0;
+                computerScore = 0;
+                drawScore = 0;
+                currentStreak = 0;
+                
+                document.getElementById('player-score').textContent = playerScore;
+                document.getElementById('computer-score').textContent = computerScore;
+                document.getElementById('draw-score').textContent = drawScore;
+                
+                var resultDisplay = document.getElementById('result-display');
+                resultDisplay.classList.add('hidden');
+            }
+        }
+
+        // Initialize game on page load
+        initGame();
+    </script>
+</body>
+</html>
